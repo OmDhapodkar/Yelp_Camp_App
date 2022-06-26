@@ -16,6 +16,8 @@ const LocalStrategy = require("passport-local");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 
+const MongoStore = require("connect-mongo");
+
 const User = require("./models/user");
 
 const ExpressError = require("./utils/ExpressError");
@@ -87,12 +89,10 @@ app.use(mongoSanitize());
 //   })
 // );
 
-const MongoDBStore = require("connect-mongodb-session")(session);
-
 const secret = process.env.SECRET || "thisshouldbeabettersecret";
 
-const store = new MongoDBStore({
-  url: dbUrl,
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
   secret,
   touchAfter: 24 * 60 * 60, //in seconds
 });
